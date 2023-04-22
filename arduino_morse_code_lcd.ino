@@ -4,16 +4,20 @@
 const unsigned int LED_PIN = 7;
 const unsigned int BTN_PIN = 9;
 
-const unsigned int DOT_MAX_MILLIS = 50;
-const unsigned int DASH_MAX_MILLIS = 150;
-const unsigned int GAP_MILLIS = 175;
+const unsigned int DOT_MAX_MILLIS = 100;
+const unsigned int DASH_MAX_MILLIS = 300;
+const unsigned int GAP_MILLIS = 325;
+const unsigned int DEBOUNCE_TIME = 25;
 
+int lastBtnState = HIGH;
+bool isBtnPushed = false;
+bool wasMorseDisplayed = true;
+unsigned int morseTreeNodeIndex = 0;
+
+int btnState;
 unsigned long pushMillis;
 unsigned long releaseMillis;
-bool btnState;
-bool isBtnPushed;
-bool wasMorseDisplayed;
-unsigned int morseTreeNodeIndex;
+unsigned long btnStateChangeMillis;
 
 void setup() {
   Serial.begin(9600);
@@ -27,6 +31,10 @@ void setup() {
 
 void loop() {
   btnState = digitalRead(BTN_PIN);
+  if (btnState != lastBtnState) btnStateChangeMillis = millis();
+
+  if (btnStateChangeMillis - millis() <= DEBOUNCE_TIME) return;
+  lastBtnState = btnState;
 
   if(btnState) {
     if(!isBtnPushed) handleBtnPush();
@@ -55,8 +63,8 @@ void handleBtnRelease() {
   const long millisDiff = releaseMillis - pushMillis;
   int dashOrDotAdd;
   
-  if(millisDiff >= DASH_MAX_MILLIS) dashOrDotAdd = 2;
-  else if(millisDiff >= DOT_MAX_MILLIS) dashOrDotAdd = 1;
+  if (millisDiff >= DASH_MAX_MILLIS) dashOrDotAdd = 2;
+  else if (millisDiff >= DOT_MAX_MILLIS) dashOrDotAdd = 1;
   morseTreeNodeIndex = buildMorseTreeNodeIndex(morseTreeNodeIndex, dashOrDotAdd);
   
   isBtnPushed = false;
