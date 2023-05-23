@@ -68,8 +68,10 @@ void handleBtnRelease() {
     const long millisDiff = releaseMillis - pushMillis;
     int dashOrDotAdd;
 
-    if (millisDiff >= DASH_MAX_MILLIS) dashOrDotAdd = 2;
-    else if (millisDiff >= DOT_MAX_MILLIS) dashOrDotAdd = 1;
+    if (millisDiff >= DASH_MAX_MILLIS)
+        dashOrDotAdd = 2;
+    else if (millisDiff >= DOT_MAX_MILLIS)
+        dashOrDotAdd = 1;
     morseTreeNodeIndex = buildMorseTreeNodeIndex(morseTreeNodeIndex, dashOrDotAdd);
 
     isBtnPushed = false;
@@ -82,9 +84,9 @@ void checkMillisSinceRelease() {
 }
 
 void displayChar() {
-	char ch = MORSE_BINARY_INDEXED_TREE[morseTreeNodeIndex];
+    char ch = MORSE_BINARY_INDEXED_TREE[morseTreeNodeIndex];
     Serial.println(ch);
-	printLcd(ch);
+    printLcd(ch);
 
     wasMorseDisplayed = true;
     morseTreeNodeIndex = 0;
@@ -101,13 +103,13 @@ void printLcd(char ch) {
         lcd.setCursor(0, 1);
         isFirstLcdRowFull = true;
     } else {
-		scrollVerticallyLcd();
+        scrollVerticallyLcd();
     }
 }
 
 void scrollVerticallyLcd() {
-	lcd.setCursor(0, 0);
+    lcd.setCursor(0, 0);
     lcd.clear();
-	lcd.print(lastLcdRow);
-	lcd.setCursor(0, 1);
+    lcd.print(lastLcdRow);
+    lcd.setCursor(0, 1);
 }
