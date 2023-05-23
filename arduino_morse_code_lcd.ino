@@ -4,8 +4,8 @@
 const unsigned int LCD_WIDTH = 16;
 const unsigned int LCD_HEIGHT = 2;
 
-const unsigned int LED_PIN = 7;
-const unsigned int BTN_PIN = 9;
+const unsigned int LED_PIN = 12;
+const unsigned int BTN_PIN = 13;
 
 const unsigned int DOT_MAX_MILLIS = 100;
 const unsigned int DASH_MAX_MILLIS = 300;
@@ -22,7 +22,7 @@ unsigned long pushMillis;
 unsigned long releaseMillis;
 unsigned long btnStateChangeMillis;
 
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+LiquidCrystal lcd(9, 8, 4, 5, 6, 7);
 int charsPrinted = 0;
 bool isFirstLcdRowFull = false;
 char lastLcdRow[16] = "";
@@ -107,6 +107,7 @@ void printLcd(char ch) {
 
 void scrollVerticallyLcd() {
 	lcd.setCursor(0, 0);
+    lcd.clear();
 	lcd.print(lastLcdRow);
 	lcd.setCursor(0, 1);
 }
