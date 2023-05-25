@@ -6,6 +6,7 @@ const unsigned int LCD_HEIGHT = 2;
 
 const unsigned int LED_PIN = 12;
 const unsigned int BTN_PIN = 13;
+const unsigned int BUZZER_PIN = 10;
 
 const unsigned int DOT_MAX_MILLIS = 100;
 const unsigned int DASH_MAX_MILLIS = 300;
@@ -31,6 +32,7 @@ void setup() {
     Serial.begin(9600);
     pinMode(BTN_PIN, INPUT);
     pinMode(LED_PIN, OUTPUT);
+    pinMode(BUZZER_PIN, OUTPUT);
     lcd.begin(LCD_WIDTH, LCD_HEIGHT);
 }
 
@@ -42,11 +44,13 @@ void loop() {
     lastBtnState = btnState;
 
     if (btnState) {
+        tone(BUZZER_PIN, 300);
         if (!isBtnPushed) handleBtnPush();
         return;
     }
 
     if (!isBtnPushed) {
+        noTone(BUZZER_PIN);
         if (!wasMorseDisplayed) checkMillisSinceRelease();
         return;
     }
@@ -85,6 +89,7 @@ void checkMillisSinceRelease() {
 
 void displayChar() {
     char ch = MORSE_BINARY_INDEXED_TREE[morseTreeNodeIndex];
+    if (morseTreeNodeIndex > sizeof(MORSE_BINARY_INDEXED_TREE) / sizeof(MORSE_BINARY_INDEXED_TREE[0])) ch = '_';
     Serial.println(ch);
     printLcd(ch);
 
