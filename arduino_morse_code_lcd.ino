@@ -8,8 +8,7 @@ const unsigned int LED_PIN = 12;
 const unsigned int BTN_PIN = 13;
 const unsigned int BUZZER_PIN = 10;
 
-const unsigned int DOT_MAX_MILLIS = 100;
-const unsigned int DASH_MAX_MILLIS = 300;
+const unsigned int DASH_MIN_MILLIS = 300;
 const unsigned int GAP_MILLIS = 325;
 const unsigned int DEBOUNCE_TIME = 25;
 
@@ -65,17 +64,14 @@ void handleBtnPush() {
 }
 
 void handleBtnRelease() {
-    Serial.println("release");
     digitalWrite(LED_PIN, 0);
 
     releaseMillis = millis();
     const long millisDiff = releaseMillis - pushMillis;
-    int dashOrDotAdd;
+    int dashOrDotAdd = 1;
 
-    if (millisDiff >= DASH_MAX_MILLIS)
-        dashOrDotAdd = 2;
-    else if (millisDiff >= DOT_MAX_MILLIS)
-        dashOrDotAdd = 1;
+    if (millisDiff >= DASH_MIN_MILLIS) dashOrDotAdd = 2;
+    Serial.println(dashOrDotAdd);
     morseTreeNodeIndex = buildMorseTreeNodeIndex(morseTreeNodeIndex, dashOrDotAdd);
 
     isBtnPushed = false;
